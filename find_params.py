@@ -4,7 +4,7 @@ def find_params(coords):
 
     map_params = {
         "ll": ",".join([toponym_longitude, toponym_lattitude]),
-        "spn": ",".join(['0.05', '0.05']),
+        "spn": ",".join(['0.005', '0.005']),
         "l": "map",
     }
 
