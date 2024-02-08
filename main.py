@@ -13,19 +13,23 @@ class MainWindow(QMainWindow):
         super().__init__()
         uic.loadUi('ui/first_ui.ui', self)
         self.setWindowTitle('YandexMaps')
+        self.map_is_displayed = False
         self.pushButton.clicked.connect(self.show_map)
+        self.buttonGroup.buttonClicked.connect(self.change_appearance)
+        self.mode = 'map'
         self.coords = None
         self.spn = 0.002
 
     def show_map(self):
+        self.map_is_displayed = True
         coords = (self.lineEdit.text(), self.lineEdit_2.text())
         self.coords = coords
-        get_image(self.coords, self.spn)
+        get_image(self.coords, self.spn, self.mode)
         pixmap = QPixmap('data/map.png')
         self.label.setPixmap(pixmap)
 
     def update_map(self):
-        get_image(self.coords, self.spn)
+        get_image(self.coords, self.spn, self.mode)
         pixmap = QPixmap('data/map.png')
         self.label.setPixmap(pixmap)
 
@@ -52,6 +56,17 @@ class MainWindow(QMainWindow):
             if event.key() == Qt.Key_Right:
                 self.coords = (str(float(self.coords[0]) + 0.0005), self.coords[1])
                 self.update_map()
+
+    def change_appearance(self):
+        if self.mapRButton.isChecked():
+            self.mode = 'map'
+        elif self.satRButton.isChecked():
+            self.mode = 'sat'
+        else:
+            self.mode = 'skl'
+
+        if self.map_is_displayed:
+            self.update_map()
 
 
 def exception_hook(cls, exception, traceback):
