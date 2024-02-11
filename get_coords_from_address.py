@@ -1,9 +1,10 @@
 import requests
+from config import MAPS_API
 
 
 def coords_from_address(address):
     search_params = {
-        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+        "apikey": MAPS_API,
         "geocode": address,
         "lang": "ru",
         "format": "json"
