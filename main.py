@@ -5,6 +5,7 @@ from io import BytesIO
 import requests
 from PyQt5.QtGui import QPixmap
 from get_image import get_image
+from get_coords_from_address import coords_from_address
 from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow
 
 
@@ -16,15 +17,18 @@ class MainWindow(QMainWindow):
         self.map_is_displayed = False
         self.pushButton.clicked.connect(self.show_map)
         self.buttonGroup.buttonClicked.connect(self.change_appearance)
+        self.pushButton_2.clicked.connect(self.address_search)
         self.mode = 'map'
         self.coords = None
         self.spn = 0.002
 
-    def show_map(self):
+    def show_map(self, coords=None, point=False):
         self.map_is_displayed = True
-        coords = (self.lineEdit.text(), self.lineEdit_2.text())
-        self.coords = coords
-        get_image(self.coords, self.spn, self.mode)
+        if not coords:
+            self.coords = (self.lineEdit.text(), self.lineEdit_2.text())
+        else:
+            self.coords = coords
+        get_image(self.coords, self.spn, self.mode, point=point)
         pixmap = QPixmap('data/map.png')
         self.label.setPixmap(pixmap)
 
@@ -32,6 +36,10 @@ class MainWindow(QMainWindow):
         get_image(self.coords, self.spn, self.mode)
         pixmap = QPixmap('data/map.png')
         self.label.setPixmap(pixmap)
+
+    def address_search(self):
+        address = self.lineEdit_3.text()
+        self.show_map(coords_from_address(address), True)
 
     def keyPressEvent(self, event):
         # Приближение/отдаление
